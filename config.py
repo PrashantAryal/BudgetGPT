@@ -1,0 +1,6 @@
+MODEL_PATH_EN = "model/mistral-7b-instruct-v0.1.Q4_K_M.gguf"
+MODEL_PATH_NP = "model/nepali-llm-instruct-q4_k_m.gguf"
+INDEX_PATH_EN = "storage/faiss_index_en"
+INDEX_PATH_NP = "storage/faiss_index_np"
+TXT_PATH_NP = "data/Nep_Budget_speech.txt"
+PDF_PATH_EN = "data/Eng_Budget_speech.pdf"

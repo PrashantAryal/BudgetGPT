@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f9f9f9;
+        }
+        
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px; 
+            display: flex;
+            flex-direction: column;
+            gap: 12px; 
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        
+        .message {
+            display: flex;
+            max-width: 80%;
+            padding: 12px 14px; 
+            border-radius: 12px;
+            line-height: 1.35; 
+            word-wrap: break-word;
+            font-size: 15px;
+        }
+        
+        .bot-message {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+            border-radius: 0 12px 12px 12px; 
+            margin-right: auto;
+        }
+        
+        .user-message {
+            background-color: #e3f2fd;
+            align-self: flex-end;
+            border-radius: 12px 0 12px 12px;
+            margin-left: auto;
+        }
+        
+        .input-container {
+            padding: 12px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .input-area {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px; 
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            outline: none;
+        }
+        
+        button {
+            padding: 0 20px; 
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 17px;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 30px;
+            color: #555;
+            margin: auto;
+            font-weight: 500;
+            line-height: 1.3; 
+        }
+
+        .welcome-image {
+            width: 400px;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .sources {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #888;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message {
+            animation: fadeIn 0.2s ease-out;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container" id="chatContainer">
+        {% if not chat_history %}
+        <div class="welcome-message">
+            Welcome to BudgetGPT!! <br>
+            Ask me about Nepal's fiscal allocations for 2024/25.<br>
+            <!-- <img src="image.webp" alt="Budget" class="welcome-image"> -->
+            <img src="{{ url_for('static', filename='images/image.webp') }}" alt="Budget" class="welcome-image">
+            Example questions:
+            <div style="font-size: 0.5em; margin-top: 15px;">
+                • आर्थिक वर्ष २०८१/८२ मा स्वास्थ्य तथा जनसंख्या मन्त्रालयको लागि कति बजेट विनियोजन गरिएको छ?<br>
+                • What energy development initiatives are planned for the fiscal year 2024/2025? <br>
+                • Reforms in Tax System
+
+                
+            </div>
+        </div>
+        {% endif %}
+        
+        {% for chat in chat_history %}
+            <div class="message user-message">
+                <div>{{ chat.query }}</div>
+            </div>
+            
+            <div class="message bot-message">
+                <div>{{ chat.response|safe }}</div>
+                {% if chat.sources %}
+                    <div class="sources">
+                        <strong>Sources:</strong>
+                        <ul>
+                            {% for source in chat.sources %}
+                                <li>{{ source }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="input-container">
+        <form method="POST" class="input-area">
+            <input type="text" name="query" required placeholder="Type your message..." autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        document.querySelector('input[name="query"]').focus();
+    </script>
+</body>
+</html>
